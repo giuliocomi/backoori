@@ -1,0 +1,25 @@
+{
+  "URI_Protocols": [
+    {
+      "URI_Protocol": "https"
+    },
+    {
+      "URI_Protocol": "calculator"
+    },
+    {
+      "URI_Protocol": "microsoft-edge"
+    },
+    {
+      "URI_Protocol": "feedback-hub"
+    },
+    {
+      "URI_Protocol": "mailto"
+    },
+    {
+      "URI_Protocol": "mk"
+    }
+  ]
+}
+
+
+
