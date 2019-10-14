@@ -1,4 +1,4 @@
-/output/gadgets
+/output/gadgets/*
 /output/agent.ps1
 *.xml
 /idea/
