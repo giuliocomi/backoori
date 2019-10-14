@@ -1,0 +1,6 @@
+/output/gadgets
+/output/agent.ps1
+*.xml
+/idea/
+*.exe
+*.iml
