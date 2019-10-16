@@ -156,7 +156,7 @@ func OnExitDialog(isOnlinePayload bool, ip string, port, timeout int) {
 			fmt.Println("Timeout for web server connection has been reached. Quitting, Bye.")
 			cleanedFolder := OnWebServerShutdown()
 			if cleanedFolder {
-				fmt.Println("gadgets folder successfully clean.")
+				fmt.Println("gadgets folder successfully cleaned.")
 			} else {
 				log.Println("Failed clearing gadgets folder upon exit.")
 			}

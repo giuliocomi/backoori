@@ -64,7 +64,6 @@ Process {
             New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
             Set-Location "HKCR:Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction SilentlyContinue
             $appxIDs = $( Get-ChildItem . ).PSChildName
-            $appxIDs
             if ($appxIDs)
             {
                 $appxIDs | ForEach-Object {

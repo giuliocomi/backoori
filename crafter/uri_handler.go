@@ -13,7 +13,7 @@ type UriEntry struct {
 	UriProtocol string `json:"URI_Protocol"`
 }
 
-// returns the struct with info for AppX IDs and URI schemes to provide to the backoori-agent
+// returns the struct with info for the URI schemes to provide to the Backoori Powershell Agent
 func GetURIs(configFile []byte) UriList {
 
 	var uri = UriList{}
