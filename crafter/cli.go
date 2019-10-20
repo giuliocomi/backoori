@@ -67,7 +67,7 @@ func PayloadDialog(payloadsToDisplay Payloads) int {
 		_, err := fmt.Scanln(&payloadIndex)
 		if err != nil || uint(len(payloadsToDisplay.Payloads)) <= uint(payloadIndex) {
 			FlushInputStream(stdin)
-			log.Println("Selected payload index not available")
+			log.Println("Selected payload index not available in the JSON config file. Add it as an entry first.")
 			continue
 		}
 		fmt.Println("Done, new gadget ready")
