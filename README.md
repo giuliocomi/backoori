@@ -17,7 +17,7 @@ The tool will be demo at BlackHat Europe Arsenal 2019:
 https://www.blackhat.com/eu-19/arsenal/schedule/#backoori-tool-aided-persistence-via-windows-uri-schemes-abuse-18131
 
 
-## Features
+### Features
 1) Implements the Windows 10 URI persistence technique
 2) Standalone
 3) 0 dependencies
@@ -44,7 +44,7 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse               
         Provide 'true' if transparently proxy request to default Universal App (you should check if proxying might work first for the specified URI) (default "false")
 ```
 
-#### Examples
+### Examples
 
 (1) Golang cli:
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_cli_output.PNG)
