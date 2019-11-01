@@ -32,8 +32,11 @@ go run main.go
 ```
 #### Cross-Compile
 Windows x64: $ env GOOS=windows GOARCH=amd64 go build -o backoori main.go
+
 Linux x64  : $ env GOOS=linux GOARCH=amd64  go build -o backoori main.go
+
 MacOs x64  : $ env GOOS=darwin GOARCH=amd64  go build -o backoori main.go
+
 [Cross-Compile Instructions](https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04#step-4-%E2%80%94-building-executables-for-different-architectures)
 
 ### Usage
