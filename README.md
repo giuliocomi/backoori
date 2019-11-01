@@ -5,7 +5,7 @@ Tool aided persistence via Windows URI schemes abuse
 <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/giulio_comi?label=Follow&style=social">
 
 ## Why
-Backoori ("Backdoor the URIs") is a Proof of Concept tool aimed to automate the technique of fileless URI persistency in Windows 10 targets.
+Backoori ("Backdoor the URIs") is a Proof of Concept tool aimed to automate the fileless URI persistence technique in Windows 10 targets.
 
 ## Abstract of the Research behind the tool
 The widespread adoption of custom URI protocols to launch specific Windows Universal App can be diverted to a nefarious purpose. The URI schemes in Windows 10 can be abused in such a way to maintain persistence via the 'Living off the Land' approach. Backdooring a compromised Windows account in userland context is a matter of seconds. The operation is concealed to the unaware victim thanks to the URI intents being transparently proxyed to the legitimate default application.
