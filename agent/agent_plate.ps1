@@ -72,7 +72,7 @@ Process {
                     try
                     {
                         $AppUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
-                        UpdateRegistryKey($gadgetPayload, $cmdSeparator, "explorer.exe shell:Appsfolder\$AppUserModelID $proxySymbol %*")
+                        UpdateRegistryKey($gadgetPayload, $cmdSeparator, "cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol %*")
                     }
                     catch # if key does not exists yet, create it
                     {

@@ -31,17 +31,18 @@ go run main.go
 ### Usage
 
 ```
-Backoori0.8: tool aided persistence via Windows URI schemes abuse                                                       Generate a ready-to-launch Powershell agent that will backdoor specific Universal URI Apps with fileless payloads of your choice.
-  -help
-        Display help details
-  -online string
-        Provide 'true' if wants agent to fetch the payloads via the webserver, 'false' otherwise to store the payloads directly in the agent PS file (default "false")
-  -payloads string
-        Provide the JSON filename containing the payloads to use in the backdoored gadgets (default "./resources/payloads_sample.json")
-  -protocols string
-        Provide the JSON filename containing the URI protocols to backdoor on the target system (default "./resources/uri_protocols_sample.json")
-  -proxy string
-        Provide 'true' if transparently proxy request to default Universal App (you should check if proxying might work first for the specified URI) (default "false")
+Backoori0.8: tool aided persistence via Windows URI schemes abuse
+| Generate a ready-to-launch Powershell agent that will backdoor specific Universal URI Apps with fileless payloads of your choice.
+|  -help
+|        Display help details
+|  -online string
+|       Provide 'true' if wants agent to fetch the payloads via the webserver, 'false' otherwise to store the payloads directly in the agent PS file (default "false")
+|  -payloads string
+|       Provide the JSON filename containing the payloads to use in the backdoored gadgets (default "./resources/payloads_sample.json")
+|  -protocols string
+|       Provide the JSON filename containing the URI protocols to backdoor on the target system (default "./resources/uri_protocols_sample.json")
+|  -proxy string
+|       Provide 'true' if transparently proxy request to default Universal App (you should check if proxying might work first for the specified URI) (default "false")
 ```
 
 ### Examples

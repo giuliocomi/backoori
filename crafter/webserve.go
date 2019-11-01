@@ -18,6 +18,7 @@ var (
 )
 
 //TODO: https, payload encryption and pass AES decryption key to persistor agent that will decrypt the payloads before deploying the gadgets
+//TODO: add connection logging and show which gadgetId has been downloaded
 func SetupWebServer(ip net.IP, port int) {
 	listeningAddress = ip.String()
 	listeningPort = strconv.Itoa(port)
@@ -48,5 +49,3 @@ func cleanGadgetsFolder() bool {
 	}
 	return errC == nil && errD == nil
 }
-
-// TODO: add connection logging and show which gadget id has been downloaded
