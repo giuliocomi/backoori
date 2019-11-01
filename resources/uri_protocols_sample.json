@@ -19,13 +19,7 @@
       "URI_Protocol": "tel"
     },
     {
-      "URI_Protocol": "http"
-    },
-    {
       "URI_Protocol": "ms-calculator"
-    },
-    {
-      "URI_Protocol": "read"
     },
     {
       "URI_Protocol": "ms-clock"

