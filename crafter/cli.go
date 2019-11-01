@@ -18,7 +18,7 @@ var (
 )
 
 func HelpMenu(version string) {
-	fmt.Println("Backoori" + version + ": tool aided persistence via Windows URI schemes abuse")
+	fmt.Println("Backoori v" + version + ": tool aided persistence via Windows URI schemes abuse")
 	fmt.Println("Generate a ready-to-launch Powershell agent that will backdoor specific Universal URI Apps with fileless payloads of your choice.")
 }
 
