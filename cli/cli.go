@@ -1,8 +1,10 @@
-package crafter
+package cli
 
 import (
 	"bufio"
 	"fmt"
+	"github.com/giuliocomi/backoori/deliverer"
+	"github.com/giuliocomi/backoori/ingestor"
 	"log"
 	"net"
 	"os"
@@ -14,7 +16,7 @@ import (
 )
 
 var (
-	stdin = bufio.NewReader(os.Stdin)
+	stdin  = bufio.NewReader(os.Stdin)
 	banner = `
 .______        ___       ______  __  ___   ______     ______   .______      __
 |   _  \      /   \     /      ||  |/  /  /  __  \   /  __  \  |   _  \    |  |
@@ -62,7 +64,7 @@ func WebServerDialog() (string, int, int) {
 	}
 }
 
-func PayloadDialog(payloadsToDisplay Payloads) int {
+func PayloadDialog(payloadsToDisplay ingestor.Payloads) int {
 	var payloadIndex int
 
 	for {
@@ -84,7 +86,7 @@ func PayloadDialog(payloadsToDisplay Payloads) int {
 	}
 }
 
-func ParamsDialog(payload Payload) Payload {
+func ParamsDialog(payload ingestor.Payload) ingestor.Payload {
 	var (
 		paramsToFill, paramsFilled []string
 		paramToDisplay             string
@@ -116,7 +118,7 @@ func FlagDialog(isOnlinePayload, shouldProxyRequest string) (bool, bool) {
 	return isOnlineBool, shouldProxyBool
 }
 
-func UriToBackdoorDialog(uriList UriList) int {
+func UriToBackdoorDialog(uriList ingestor.UriList) int {
 	var uriIndex int
 
 	for {
@@ -163,7 +165,7 @@ func OnExitDialog(isOnlinePayload bool, ip string, port, timeout int) {
 			log.Println("Backoori terminated.")
 		case <-timer.C:
 			fmt.Println(">Timeout for web server connection has been reached. Quitting, Bye.")
-			cleanedFolder := OnWebServerShutdown()
+			cleanedFolder := deliverer.OnWebServerShutdown()
 			if cleanedFolder {
 				fmt.Println("gadgets folder successfully cleaned.")
 			} else {

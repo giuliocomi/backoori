@@ -1,4 +1,4 @@
-package crafter
+package deliverer
 
 import (
 	"bytes"

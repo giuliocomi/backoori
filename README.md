@@ -64,6 +64,11 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse
 * *Powershell agent output*
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_agent_output.PNG)
 
+### Next steps
+* Adding logging and symmetric payload encryption to the web server that deploys the gadgets
+* Support gadget interactions
+* Add more compatible payloads
+* Convert this standalone project to a Metasploit module
 
 ## Issues
 Spot a bug? Please create an issue here on GitHub (https://github.com/giuliocomi/backoori/issues)

