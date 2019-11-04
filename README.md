@@ -52,8 +52,8 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse
 |       Provide the JSON filename containing the payloads to use in the backdoored gadgets (default "./resources/payloads_sample.json")
 |  -protocols string
 |       Provide the JSON filename containing the URI protocols to backdoor on the target system (default "./resources/uri_protocols_sample.json")
-|  -proxy string
-|       Provide 'true' if transparently proxy request to default Universal App (you should check if proxying might work first for the specified URI) (default "false")
+|  -psversion int
+|       Provide the Powershell version that the agent will use for the payloads (recommended v2) (default 3)
 ```
 
 ### Examples
