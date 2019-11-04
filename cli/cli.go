@@ -108,14 +108,13 @@ func ParamsDialog(payload ingestor.Payload) ingestor.Payload {
 	return payload
 }
 
-func FlagDialog(isOnlinePayload, shouldProxyRequest string) (bool, bool) {
+func FlagDialog(isOnlinePayload string) (bool) {
 	isOnlineBool, err1 := strconv.ParseBool(isOnlinePayload)
-	shouldProxyBool, err2 := strconv.ParseBool(shouldProxyRequest)
-	if err1 != nil || err2 != nil {
+	if err1 != nil {
 		log.Println("Cannot convert flags passed via argument to Boolean")
 		os.Exit(1)
 	}
-	return isOnlineBool, shouldProxyBool
+	return isOnlineBool
 }
 
 func UriToBackdoorDialog(uriList ingestor.UriList) int {

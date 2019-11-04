@@ -14,8 +14,8 @@ type GadgetItem struct {
 	ingestor.Payload
 }
 
-func OutputAgent(listeningIp string, httpPort int, isOnlinePayload, shouldProxyRequest bool, gadgetsList []GadgetItem) {
-	agentTemplateWithArguments, err := FillAgentWithArguments(listeningIp, httpPort, isOnlinePayload, shouldProxyRequest)
+func OutputAgent(listeningIp string, httpPort, powershellVersion int, isOnlinePayload bool, gadgetsList []GadgetItem) {
+	agentTemplateWithArguments, err := FillAgentWithArguments(listeningIp, httpPort, powershellVersion, isOnlinePayload)
 	if err != nil {
 		log.Println("Error while reading the default ./crafter/agent_plate.ps1 file")
 		os.Exit(1)
@@ -42,14 +42,14 @@ func OutputAgent(listeningIp string, httpPort int, isOnlinePayload, shouldProxyR
 	}
 }
 
-func FillAgentWithArguments(listeningIp string, httpPort int, isOnlinePayload, shouldProxyRequest bool) (string, error) {
+func FillAgentWithArguments(listeningIp string, httpPort, powershellVersion int, isOnlinePayload bool) (string, error) {
 	persistorTemplateInBytes, err := ioutil.ReadFile("./crafter/agent_plate.ps1")
 	persistorTemplateString := string(persistorTemplateInBytes)
 	replacePlaceholders := strings.NewReplacer(
-		"{listeningIp}", listeningIp,
-		"{httpPort}", strconv.Itoa(httpPort),
+		"{LISTENINGIP}", listeningIp,
+		"{HTTPPORT}", strconv.Itoa(httpPort),
 		"\"{ISONLINEFETCH}\"", "$"+(strconv.FormatBool(isOnlinePayload)),
-		"\"{PROXYREQUEST}\"", "$"+(strconv.FormatBool(shouldProxyRequest)))
+		"\"{POWERSHELLVERSION}\"", strconv.Itoa(powershellVersion))
 
 	return replacePlaceholders.Replace(persistorTemplateString), err
 }

