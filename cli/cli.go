@@ -108,7 +108,7 @@ func ParamsDialog(payload ingestor.Payload) ingestor.Payload {
 	return payload
 }
 
-func FlagDialog(isOnlinePayload string) (bool) {
+func FlagDialog(isOnlinePayload string) bool {
 	isOnlineBool, err1 := strconv.ParseBool(isOnlinePayload)
 	if err1 != nil {
 		log.Println("Cannot convert flags passed via argument to Boolean")

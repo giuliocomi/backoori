@@ -10,14 +10,14 @@ import (
 	"os"
 )
 
-const version = "0.91"
+const version = "0.92"
 
 var (
 	isHelpNeeded          = flag.Bool("help", false, "Display help details")
 	jsonURIprotocols      = flag.String("protocols", "./resources/uri_protocols_sample.json", "Provide the JSON filename containing the URI protocols to backdoor on the target system")
 	jsonPayloads          = flag.String("payloads", "./resources/payloads_sample.json", "Provide the JSON filename containing the payloads to use in the backdoored gadgets")
-	isOnlinePayloadString = flag.String("online", "false", "Provide 'true' if wants agent to fetch the payloads via the webserver, 'false' otherwise to store the payloads directly in the agent PS file")
-	powershellVersion    = flag.Int("ps-version", 3, "Provide the Powershell version that the agent will use for the payloads (recommended v2)")
+	isOnlinePayloadString = flag.String("online", "false", "Provide 'true' if wants agent to fetch the payloads via the webserver, 'false' otherwise to store the payloads directly in the agent PS agent")
+	powershellVersion     = flag.Int("ps-version", 3, "Provide the Powershell version that the agent will use for the payloads (recommended v2 for avoiding security enhancements of recent versions)")
 	gadgetList            []crafter.GadgetItem
 	chosenPayload         ingestor.Payload
 	listeningIp           string

