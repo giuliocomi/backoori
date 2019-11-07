@@ -56,13 +56,17 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse
 |       Provide the Powershell version that the agent will use for the payloads (recommended v2) (default 3)
 ```
 
-### Examples
-
+### Example Output
 * *Golang cli*
+
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_cli_output.PNG)
 
 * *Powershell agent output*
 ![alt text](https://github.com/giuliocomi/backoori/blob/master/documentation/example_agent_output.PNG)
+
+### Demo video: User triggered URI persistence scenario
+[![Watch the video](https://github.com/giuliocomi/backoori/blob/master/documentation/cover_image_user_triggered_persistence_demo.PNG)](https://youtu.be/KLtDuhccfec)
+
 
 ### Next steps
 * Adding logging and symmetric payload encryption to the web server that deploys the gadgets
