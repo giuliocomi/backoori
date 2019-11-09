@@ -9,7 +9,7 @@ Backoori ("Backdoor the URIs") is a Proof of Concept tool aimed to automate the 
 
 ## Abstract of the Research behind the tool
 The widespread adoption of custom URI protocols to launch specific Windows Universal App can be diverted to a nefarious purpose. The URI schemes in Windows 10 can be abused in such a way to maintain persistence via the 'Living off the Land' approach. Backdooring a compromised Windows account in userland context is a matter of seconds. The operation is concealed to the unaware victim thanks to the URI intents being transparently proxyed to the legitimate default application.
-The subtle fileless payloads can be triggered in many contexts, from the Narrator available in the Windows logon screen (an undocumented Accessibility Feature abuse technique that set off this whole research) to the classical web attack surface.
+The subtle fileless payloads can be triggered in many contexts, from the Narrator available in the Windows logon screen (an undocumented Accessibility Feature abuse technique that set off this whole research) to the classical web 'attack surface'.
 
 All this research started with a novel Accessibility Feature Abuse I discuss here: 
 
