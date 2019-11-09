@@ -59,10 +59,10 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse
 ### Example Output
 * *Golang cli*
 
-![alt text](https://imgur.com/zAI1Rdf)
+![](https://imgur.com/zAI1Rdf.png)
 
 * *Powershell agent output*
-![alt text](https://imgur.com/jYWo83T)
+![](https://imgur.com/jYWo83T.png)
 
 ### Demo videos:
 1) URI persistence technique: User triggered persistence scenario
