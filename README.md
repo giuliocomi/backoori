@@ -19,6 +19,15 @@ The tool will be demo at BlackHat Europe Arsenal 2019:
 
 https://www.blackhat.com/eu-19/arsenal/schedule/#backoori-tool-aided-persistence-via-windows-uri-schemes-abuse-18131
 
+### Demo videos
+1) URI persistence technique: User triggered persistence scenario
+https://www.youtube.com/watch?v=oR9cSs6Sw4g
+
+2) URI persistence technique: Hijacking multiple Universal Apps
+https://www.youtube.com/watch?v=KLtDuhccfec&t=49s
+
+3) URI persistence technique: Going beyond User triggered persistence via web 'attack surface'
+https://www.youtube.com/watch?v=W6FqUx8vi5c
 
 ### Features
 1) Implements the Windows 10 URI persistence technique
@@ -63,16 +72,6 @@ Backoori0.8: tool aided persistence via Windows URI schemes abuse
 
 * *Powershell agent output*
 ![](https://imgur.com/jYWo83T.png)
-
-### Demo videos:
-1) URI persistence technique: User triggered persistence scenario
-https://www.youtube.com/watch?v=oR9cSs6Sw4g
-
-2) URI persistence technique: Hijacking multiple Universal Apps
-https://www.youtube.com/watch?v=KLtDuhccfec&t=49s
-
-3) URI persistence technique: Going beyond User triggered persistence via web 'attack surface'
-https://www.youtube.com/watch?v=W6FqUx8vi5c
 
 ### Possible next steps
 * [ ] Adding logging and symmetric payload encryption to the web server that deploys the gadgets
