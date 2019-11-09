@@ -74,10 +74,10 @@ https://www.youtube.com/watch?v=KLtDuhccfec&t=49s
 3) URI persistence technique: Going beyond User triggered persistence via web 'attack surface'
 https://www.youtube.com/watch?v=W6FqUx8vi5c
 
-### Next steps
-* Adding logging and symmetric payload encryption to the web server that deploys the gadgets
-* Support gadget interactions
-* Convert this standalone project to a Metasploit module
+### Possible next steps
+* [ ] Adding logging and symmetric payload encryption to the web server that deploys the gadgets
+* [ ] Support gadget interactions
+* [ ] Convert this standalone project to a Metasploit module
 
 ## Issues
 Spot a bug? Please create an issue here on GitHub (https://github.com/giuliocomi/backoori/issues)
