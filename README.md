@@ -51,7 +51,7 @@ go run main.go
 ### Usage
 
 ```
-Backoori0.8: tool aided persistence via Windows URI schemes abuse
+Backoori0.92: tool aided persistence via Windows URI schemes abuse
 | Generate a ready-to-launch Powershell agent that will backdoor specific Universal URI Apps with fileless payloads of your choice.
 |  -help
 |        Display help details
