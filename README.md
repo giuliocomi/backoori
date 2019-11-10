@@ -73,6 +73,10 @@ Backoori0.92: tool aided persistence via Windows URI schemes abuse
 * *Powershell agent output*
 ![](https://imgur.com/jYWo83T.png)
 
+### How to test
+The tool will make irreversible changes to the registry and manual repair is necessary :-).
+Please test it on a VM or within the new Windows Sandbox App.
+
 ### Possible next steps
 * [ ] Adding logging and symmetric payload encryption to the web server that deploys the gadgets
 * [ ] Support gadget interactions
