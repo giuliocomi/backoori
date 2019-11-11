@@ -49,13 +49,11 @@ Process {
         {
             $appxID = $( Get-ItemProperty -Path "HKCU:\\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\$uriProtocol\UserChoice" -Name "ProgID" -ErrorAction Stop ).ProgId
             # get pathname of the binary of the Universal App (via ordered lookup in HKEY_CURRENT_USER and as fallback in HKLM)
-            $appUserModelID = (Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Application" -ErrorAction SilentlyContinue).AppUserModelID
             $currentHandlerValue = $( Get-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
-            if ( [string]::IsNullOrEmpty($appUserModelID) -or [string]::IsNullOrEmpty($currentHandlerValue))
+            if ( [string]::IsNullOrEmpty($currentHandlerValue))
             {
-                $appUserModelID = (Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Application" -ErrorAction Stop).appUserModelID
                 $currentHandlerValue = $( Get-ItemProperty -Path "HKLM:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -ErrorAction SilentlyContinue ).'(default)'
-                if ( [string]::IsNullOrEmpty($appUserModelID) -or [string]::IsNullOrEmpty($currentHandlerValue))
+                if ( [string]::IsNullOrEmpty($currentHandlerValue))
                 {
                     throw "default Universal App handler is empty"
                 }
