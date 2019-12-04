@@ -73,6 +73,14 @@ Backoori0.92: tool aided persistence via Windows URI schemes abuse
 * *Powershell agent output*
 ![](https://imgur.com/jYWo83T.png)
 
+### How to add more payloads
+The template of the payloads can be specified via -payloads flag (the default file is ./resources/payloads_sample.json).
+You can place any payload you wish in the JSON file but you need to follow the conventions of other samples to set at program runtime the value you wish for certain placeholder.
+
+```
+e.g. {{IP}}, {{COMMAND}}, {{PORT}}, {{FILENAME}}, etc.
+```
+
 ### How to test
 The tool will make irreversible changes to the registry and manual repair is necessary :-).
 Please test it on a VM or within the new Windows Sandbox App.
