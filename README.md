@@ -15,7 +15,8 @@ All this research started with a novel Accessibility Feature Abuse I discuss her
 
 https://www.secjuice.com/abusing-windows-10-for-fileless-persistence/
 
-The tool will be demo at BlackHat Europe Arsenal 2019:
+### Slides BlackHat Arsenal presentation
+https://www.slideshare.net/GiulioComi/windows-10-uri-persistence-technique
 
 https://www.blackhat.com/eu-19/arsenal/schedule/#backoori-tool-aided-persistence-via-windows-uri-schemes-abuse-18131
 
