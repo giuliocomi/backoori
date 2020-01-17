@@ -1,6 +1,7 @@
 # backoori
 Tool aided persistence via Windows URI schemes abuse
 <br/>
+<a href="https://github.com/giuliocomi/backoori/"><img alt="Black Hat Arsenal Europe 2019" src="https://github.com/giuliocomi/backoori/blob/master/badge_arsenal_blackhat_europe_2019.svg"/></a>
 <a href="https://raw.githubusercontent.com/empijei/wapty/master/LICENSE" rel="nofollow"><img src="https://camo.githubusercontent.com/dcb3a3de32cb31ae6a7edf80d88747f989878809/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d47504c76332d626c75652e737667" alt="License" data-canonical-src="https://img.shields.io/badge/license-GPLv3-blue.svg" style="max-width:100%;"></a>
 <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/giulio_comi?label=Follow&style=social">
 
